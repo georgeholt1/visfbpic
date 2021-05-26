@@ -41,7 +41,7 @@ def animated_plasma_density(
     r_roi=None,
     z_roi=(0, None),
     pol='y',
-    relative_n_max=0.003,
+    relative_n_max=1,
     dpi=200,
     figsize=(8, 4.5),
     cmap="haline",
@@ -69,7 +69,7 @@ def animated_plasma_density(
         Polarisation of the laser to plot. Defaults to 'y'.
     relative_n_max : float, optional
         The maximum value of the colour scale relative to the maximum number
-        density at any time in the simulation. Defaults to 0.003.
+        density at any time in the simulation. Defaults to 1.
     dpi : int, optional
         Dots per inch resolution. Changing this parameter may result in a bad
         plot layout. Defaults to 200.
@@ -277,7 +277,7 @@ def animated_plasma_density_and_info(
     r_roi=None,
     z_roi=(0, None),
     pol='y',
-    relative_n_max=0.003,
+    relative_n_max=1,
     dpi=200,
     figsize=(8, 4.5),
     cmap="haline",
@@ -314,7 +314,7 @@ def animated_plasma_density_and_info(
         Polarisation of the laser to plot. Defaults to 'y'.
     relative_n_max : float, optional
         The maximum value of the colour scale relative to the maximum number
-        density at any time in the simulation. Defaults to 0.003.
+        density at any time in the simulation. Defaults to 1.
     dpi : int, optional
         Dots per inch resolution. Changing this parameter may result in a bad
         plot layout. Defaults to 200.
@@ -418,13 +418,20 @@ def animated_plasma_density_and_info(
     except OverflowError:
         print("max charge is 0")
         q_e_max_oom = 0
+    except ValueError:
+        print("max charge is 0")
+        q_e_max_oom = 0
     try:
         gamma_max_oom = int(np.floor(np.log10(gamma_max)))
     except OverflowError:
         gamma_max_oom = 0
+    except ValueError:
+        gamma_max_oom = 0
     try:
         gamma_plus_sigma_max_oom = int(np.floor(np.log10(gamma_plus_sigma_max)))
     except OverflowError:
+        gamma_plus_sigma_max_oom = 0
+    except ValueError:
         gamma_plus_sigma_max_oom = 0
     lambda_max_oom = int(np.floor(np.log10(lambda_max)))
     a0_max_oom = int(np.floor(np.log10(a0_max)))
@@ -809,5 +816,5 @@ if __name__ == "__main__":
         sys.argv[1],
         sys.argv[2],
         -125e-6,
-        0.0083
+        0.0083,
     )
