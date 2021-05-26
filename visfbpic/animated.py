@@ -208,7 +208,7 @@ def animated_plasma_density(
     )
     ax.set_ylabel('$r$ ($\mathrm{\mu}$m)')
     if z_units == "window":
-        ax.set_xlabel('$\zeta$ $\mathrm{\mu}$m)')
+        ax.set_xlabel('$\zeta$ ($\mathrm{\mu}$m)')
     else:
         ax.set_xlabel('$z$ ($\mathrm{\mu}$m)')
     cax.set_ylabel(
