@@ -12,6 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib import animation
+from matplotlib.ticker import FormatStrFormatter
 from scipy.constants import e, c, pi
 from tqdm import tqdm
 import sys
@@ -503,7 +504,7 @@ def animated_plasma_density_and_info(
         ncols=2, nrows=3,
         left=0.60, right=0.99,
         bottom=0.1, top=0.9,
-        wspace=0.41
+        wspace=0.5
     )
 
     ax_density_profile = fig.add_subplot(gs1[0, :-1])
@@ -640,6 +641,15 @@ def animated_plasma_density_and_info(
     # change tick positions
     ax_density_profile.xaxis.tick_top()
     ax_density_profile.xaxis.set_label_position('top')
+    
+    # set precision
+    y_major_formatter = FormatStrFormatter('%.2f')
+    ax_q.yaxis.set_major_formatter(y_major_formatter)
+    ax_lambda.yaxis.set_major_formatter(y_major_formatter)
+    ax_w.yaxis.set_major_formatter(y_major_formatter)
+    ax_gamma.yaxis.set_major_formatter(y_major_formatter)
+    ax_a0.yaxis.set_major_formatter(y_major_formatter)
+    ax_ct.yaxis.set_major_formatter(y_major_formatter)
 
     # set axis labels
     ax_density_profile.set_xlabel('$z$ ($\mathrm{\mu}$m)')
@@ -650,7 +660,7 @@ def animated_plasma_density_and_info(
     else:
         ax_lwfa.set_xlabel('$z$ ($\mathrm{\mu}$m)')
     ax_lwfa.set_ylabel('$r$ ($\mathrm{\mu}$m)')
-    ax_lwfa_cb.set_title(r'$n_e$ ($\times 10 ^ {{{}}}$ '.format(
+    ax_lwfa_cb.set_title('$n_e$\n' + r'($\times 10 ^ {{{}}}$ '.format(
         n_e_max_plot_oom-6) + 'cm$^{-3}$)')
     ax_q.set_ylabel(r'$|q_e|$ ($\times 10 ^ {{{}}}$ '.format(q_e_max_oom) + 'C)')
     ax_gamma.set_ylabel(r'$\hat{\gamma}$' + r' ($\times 10 ^ {{{}}}$'.format(
@@ -663,6 +673,9 @@ def animated_plasma_density_and_info(
     ax_ct.set_ylabel(r'$c \tau_l$ ($\times 10 ^ {{{}}}$ '.format(ct_max_oom) +\
         'm)')
     ax_ct.set_xlabel(r'$t$ (ps)')
+
+    fig.align_ylabels([ax_q, ax_lambda, ax_w])
+    fig.align_ylabels([ax_gamma, ax_a0, ax_ct])
 
     t_text = fig.text(
         ax_q.get_position().x0+(ax_gamma.get_position().x1-ax_q.get_position().x0)/2,
