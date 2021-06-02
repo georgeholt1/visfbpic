@@ -16,7 +16,7 @@ Once installation is complete, the modules are available via a Python interprete
 
 ```
 >> import visfbpic
->> visfbpic.animated.animated_plasma_density('<path/to/simulation/directory/>')
+>> visfbpic.animated.animated_plasma_density('<path/to/simulation/directory/>', n_max=1e24)
 ```
 
  For now, documentation is accessed via the docstrings.
