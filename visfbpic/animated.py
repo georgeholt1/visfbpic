@@ -42,7 +42,8 @@ def animated_plasma_density(
     r_roi=None,
     z_roi=(0, None),
     pol='y',
-    relative_n_max=1,
+    n_max=None,
+    relative_n_max=None,
     dpi=200,
     figsize=(8, 4.5),
     cmap="haline",
@@ -68,9 +69,13 @@ def animated_plasma_density(
         boundary). Defaults to (0, None), which selects the whole domain.
     pol : str, optional
         Polarisation of the laser to plot. Defaults to 'y'.
+    n_max : float, optional
+        The maximum value of the colour scale. Either this or relative_n_max
+        must be supplied. Defaults to None.
     relative_n_max : float, optional
         The maximum value of the colour scale relative to the maximum number
-        density at any time in the simulation. Defaults to 1.
+        density at any time in the simulation. Either this or n_max must be
+        supplied. Defaults to None.
     dpi : int, optional
         Dots per inch resolution. Changing this parameter may result in a bad
         plot layout. Defaults to 200.
@@ -86,6 +91,16 @@ def animated_plasma_density(
         Interval between frames in ms. Governs the length of the animation.
         Defaults to 100.
     '''
+    if n_max is None and relative_n_max is None:
+        raise ValueError("Either n_max or relative_n_max must be supplied")
+    elif n_max is not None and relative_n_max is not None:
+        print("n_max and relative_n_max both supplied, defaulting to n_max")
+        c_scale = "absolute"
+    elif n_max is None and relative_n_max is not None:
+        c_scale = "relative"
+    elif n_max is not None and relative_n_max is None:
+        c_scale = "absolute"
+    
     if out_dir is None:
         out_dir = os.path.join(sup_dir, "analysis", "plasma_density")
         print("Output directory not specified")
@@ -111,7 +126,10 @@ def animated_plasma_density(
     n_e_max_oom = int(np.floor(np.log10(n_e_max)))
     
     # get maximum number density for plot
-    n_e_max_plot = n_e_max * relative_n_max
+    if c_scale == "relative":
+        n_e_max_plot = n_e_max * relative_n_max
+    elif c_scale == "absolute":
+        n_e_max_plot = n_max
     n_e_max_plot_oom = int(np.floor(np.log10(n_e_max_plot)))
     n_e_max_plot /= 10.0 ** n_e_max_plot_oom
     
@@ -278,7 +296,8 @@ def animated_plasma_density_and_info(
     r_roi=None,
     z_roi=(0, None),
     pol='y',
-    relative_n_max=1,
+    n_max=None,
+    relative_n_max=None,
     dpi=200,
     figsize=(8, 4.5),
     cmap="haline",
@@ -313,9 +332,13 @@ def animated_plasma_density_and_info(
         boundary). Defaults to (0, None), which selects the whole domain.
     pol : str, optional
         Polarisation of the laser to plot. Defaults to 'y'.
+    n_max : float, optional
+        The maximum value of the colour scale. Either this or relative_n_max
+        must be supplied. Defaults to None.
     relative_n_max : float, optional
         The maximum value of the colour scale relative to the maximum number
-        density at any time in the simulation. Defaults to 1.
+        density at any time in the simulation. Either this or n_max must be
+        supplied. Defaults to None.
     dpi : int, optional
         Dots per inch resolution. Changing this parameter may result in a bad
         plot layout. Defaults to 200.
@@ -331,6 +354,16 @@ def animated_plasma_density_and_info(
         Interval between frames in ms. Governs the length of the animation.
         Defaults to 100.
     '''
+    if n_max is None and relative_n_max is None:
+        raise ValueError("Either n_max or relative_n_max must be supplied")
+    elif n_max is not None and relative_n_max is not None:
+        print("n_max and relative_n_max both supplied, defaulting to n_max")
+        c_scale = "absolute"
+    elif n_max is None and relative_n_max is not None:
+        c_scale = "relative"
+    elif n_max is not None and relative_n_max is None:
+        c_scale = "absolute"
+    
     if out_dir is None:
         out_dir = os.path.join(sup_dir, "analysis", "complete")  
         print("Output directory not specified")
@@ -440,7 +473,10 @@ def animated_plasma_density_and_info(
     ct_max_oom = int(np.floor(np.log10(ct_max)))
     
     # get maximum number density for plot
-    n_e_max_plot = n_e_max * relative_n_max
+    if c_scale == "relative":
+        n_e_max_plot = n_e_max * relative_n_max
+    elif c_scale == "absolute":
+        n_e_max_plot = n_max
     n_e_max_plot_oom = int(np.floor(np.log10(n_e_max_plot)))
     n_e_max_plot /= 10.0 ** n_e_max_plot_oom
     
@@ -824,10 +860,17 @@ def animated_plasma_density_and_info(
 
 # unit testing
 if __name__ == "__main__":
-    # animated_plasma_density(sys.argv[1], z_units='simulation')
+    # animated_plasma_density(
+    #     sys.argv[1],
+    #     z_units='simulation',
+    #     # n_max=1e24,
+    #     relative_n_max=0.003
+    # )
     animated_plasma_density_and_info(
         sys.argv[1],
         sys.argv[2],
         -125e-6,
         0.0083,
+        # n_max=1e24,
+        relative_n_max=0.003
     )
