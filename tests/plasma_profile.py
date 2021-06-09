@@ -1,19 +1,10 @@
-# Author: George K. Holt
-# License: MIT
-# Version: 0.1.0
-"""
-Part of VISFBPIC.
-
-Contains an example plasma density profile method.
-"""
 import numpy as np
 from scipy.constants import pi
 
 def number_density(z):
-    '''For a given value of z-position, return number density n.'''
-    n0 = 1.0e24
+    n0 = 1e24
     ramp_length = 100e-6
-    plateau_length = 8e-3
+    plateau_length = 2e-3
     
     if z < 0:
         n = 0

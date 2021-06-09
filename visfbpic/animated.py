@@ -1,6 +1,6 @@
 # Author: George K. Holt
 # License: MIT
-# Version: 0.0.1
+# Version: 0.1.0
 """
 Part of VISFBPIC.
 
@@ -316,7 +316,7 @@ def animated_plasma_density_and_info(
         should take one argument: a value of z-position, and should return a
         corresponding number density value. See `plasma_profile_example.py` for
         an example.
-    z_min, zmax : float
+    z_min, z_max : float
         Minimum and maximum values of z-coordinate for the plasma profile.
     z_points : int, optional
         Number of points to sample the number density profile along z.
@@ -856,6 +856,85 @@ def animated_plasma_density_and_info(
     )
     
     ani.save(os.path.join(out_dir, "complete.mp4"))
+    
+    
+    
+def animated_plasma_density_and_info_compare(
+    sup_dir_1,
+    sup_dir_2,
+    n_file_1,
+    n_file_2,
+    z_min,
+    z_max,
+    out_dir,
+    z_points=1000,
+    r_roi=None,
+    z_roi=(0, None),
+    pol_1='y',
+    pol_2='y',
+    n_max=None,
+    relative_n_max=None,
+    dpi=200,
+    figsize=(8, 4.5),
+    cmap="haline",
+    z_units="window",
+    interval=100
+):
+    '''
+    Creates animated plasma density and measured values plots for two
+    simulations.
+    
+    The parameter names ending in _1 and _2 are for the two simulations to be
+    compared.
+    
+    Parameters
+    ----------
+    sup_dir_1, sup_dir_2 : str
+        Path to the simulation super directories. The simulation diags should be
+        in here.
+    n_file_1, n_file_2 : str
+        Path to files containing the `number_density` functions. See docstring
+        for `animated_plasma_density_and_info` in this module.
+    z_min, z_max : float
+        Minimum and maximum values of z-coordinate for the plasma profiles.
+    out_dir : str
+        Path to output directory within which to save the animation.
+    z_points : int, optional
+        Number of points to sample the number density profile along z.
+    r_roi : float, optional
+        Radial coordinate of the region of interest in SI units. Defaults to
+        None, which defines the ROI to be the whole domain.
+    z_roi : tuple, optional
+        z-directional coordinates of the region of interest in the form
+        (z_low, z_up) in relative units (i.e. 0 is left boundary, 1 is right
+        boundary). Defaults to (0, None), which selects the whole domain.
+    pol_1, pol_2 : str, optional
+        Polarisation of the laser. Defaults to 'y'.
+    n_max : float, optional
+        The maximum value of the colour scale. Either this or relative_n_max
+        must be supplied. Defaults to None.
+    relative_n_max : float, optional
+        The maximum value of the colour scale relative to the maximum number
+        density at any time in the simulation. Either this or n_max must be
+        supplied. Defaults to None.
+    dpi : int, optional
+        Dots per inch resolution. Changing this parameter may result in a bad
+        plot layout. Defaults to 200.
+    figsize : tuple, optional
+        Figure size in the form (width, height). Changing this parameter may
+        result in a bad plot layout. Defaults to (8, 4.5).
+    cmap : str, optional
+        Colour map for the number density plot. Either "haline" or "viridis".
+        Defaults to "haline".
+    z_units : str, optional
+        Units of the z-axis. Either 'window' (default) or 'simulation'.
+    interval : int, optional
+        Interval between frames in ms. Governs the length of the animation.
+        Defaults to 100.
+    '''
+    
+    pass
+
 
 
 # unit testing
@@ -866,6 +945,7 @@ if __name__ == "__main__":
     #     # n_max=1e24,
     #     relative_n_max=0.003
     # )
+    
     animated_plasma_density_and_info(
         sys.argv[1],
         sys.argv[2],

@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="visfbpic",
-    version="0.0.1",
+    version="0.1.0",
     author="George K. Holt",
     description="A package for visualising FBPIC results",
     long_description=long_description,
