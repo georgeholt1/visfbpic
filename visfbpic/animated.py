@@ -932,25 +932,83 @@ def animated_plasma_density_and_info_compare(
         Interval between frames in ms. Governs the length of the animation.
         Defaults to 100.
     '''
+    if n_max is None and relative_n_max is None:
+        raise ValueError("Either n_max or relative_n_max must be supplied")
+    elif n_max is not None and relative_n_max is not None:
+        print("n_max and relative_n_max both supplied, defaulting to n_max")
+        c_scale = "absolute"
+    elif n_max is None and relative_n_max is not None:
+        c_scale = "relative"
+    elif n_max is not None and relative_n_max is None:
+        c_scale = "absolute"
     
-    pass
+    sim_dir_1 = os.path.join(sup_dir_1, "diags", "hdf5")
+    sim_dir_2 = os.path.join(sup_dir_2, "diags", "hdf5")
+    
+    # load diagnostics
+    ts_1 = OpenPMDTimeSeries(sim_dir_1)
+    ts_2 = OpenPMDTimeSeries(sim_dir_2)
+    lpd_1 = LpaDiagnostics(sim_dir_1)
+    lpd_2 = LpaDiagnostics(sim_dir_2)
+    
+    # generate number density distributions
+    z_array = np.linspace(z_min, z_max, z_points)
+    spec_1 = importlib.util.spec_from_file_location(
+        "plasma_profile",
+        n_file_1
+    )
+    spec_2 = importlib.util.spec_from_file_location(
+        "plasma_profile",
+        n_file_2
+    )
+    number_density_mod_1 = importlib.util.module_from_spec(spec_1)
+    number_density_mod_2 = importlib.util.module_from_spec(spec_2)
+    spec_1.loader.exec_module(number_density_mod_1)
+    spec_2.loader.exec_module(number_density_mod_2)
+    n_array_1 = []
+    n_array_2 = []
+    for z in z_array:
+        n_array_1.append(number_density_mod_1.number_density(z))
+        n_array_2.append(number_density_mod_2.number_density(z))
+    n_array_1 = np.array(n_array_1)
+    n_array_2 = np.array(n_array_2)
+    n_profile_1_max_oom = int(np.floor(np.log10(n_array_1.max())))
+    n_profile_2_max_oom = int(np.floor(np.log10(n_array_2.max())))
+    
+    plt.plot(z_array, n_array_1)
+    plt.plot(z_array, n_array_2)
+    plt.savefig(os.path.join(out_dir, "n.png"))
+    plt.close()
+    
 
 
 
 # unit testing
 if __name__ == "__main__":
+    
     # animated_plasma_density(
     #     sys.argv[1],
     #     z_units='simulation',
+    #     n_max=1e24,
+    #     # relative_n_max=0.003
+    # )
+    
+    # animated_plasma_density_and_info(
+    #     sys.argv[1],
+    #     sys.argv[2],
+    #     -125e-6,
+    #     0.0083,
     #     # n_max=1e24,
     #     relative_n_max=0.003
     # )
     
-    animated_plasma_density_and_info(
+    animated_plasma_density_and_info_compare(
         sys.argv[1],
         sys.argv[2],
-        -125e-6,
-        0.0083,
-        # n_max=1e24,
-        relative_n_max=0.003
+        sys.argv[3],
+        sys.argv[4],
+        -100e-6,
+        2300e-6,
+        sys.argv[5],
+        n_max=1
     )

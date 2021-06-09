@@ -159,3 +159,5 @@ cython_debug/
 
 build_env.sh
 envs/
+tests_dev/
+visfbpic_conda_environment_dev.yml
