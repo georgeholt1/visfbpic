@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.patches as mpatches
 from matplotlib import animation
 from matplotlib.ticker import FormatStrFormatter
 from scipy.constants import e, c, pi
@@ -1166,9 +1167,29 @@ def animated_plasma_density_and_info_compare(
         leg_width * ax_lwfa.get_position().width,
         leg_height * ax_lwfa.get_position().height
     ))
+    fancybox_1 = mpatches.FancyBboxPatch(
+        (0.07, 0.07),
+        0.9, 0.9,
+        facecolor='w',
+        edgecolor='None',
+        alpha=0.3,
+        boxstyle="round,pad=0.02",
+        mutation_scale=0.2
+    )
+    fancybox_2 = mpatches.FancyBboxPatch(
+        (0.07, 0.07),
+        0.9, 0.9,
+        facecolor='w',
+        edgecolor='None',
+        alpha=0.3,
+        boxstyle="round,pad=0.02",
+        mutation_scale=0.2
+    )
+    ax_leg_1.add_patch(fancybox_1)
+    ax_leg_2.add_patch(fancybox_2)
     pos_y_1 = 0.5
-    pos_x_1 = 1/4
-    pos_x_2 = 3/4
+    pos_x_1 = 4/10
+    pos_x_2 = 9/10
     pos_x_1_1 = 1/10
     pos_x_1_2 = 4/10
     pos_x_2_1 = 6/10
@@ -1240,7 +1261,6 @@ def animated_plasma_density_and_info_compare(
     ax_leg_2.get_yaxis().set_visible(False)
     ax_leg_1.axis('off')
     ax_leg_2.axis('off')
-    
     
     # get colour map
     if cmap == "haline":
