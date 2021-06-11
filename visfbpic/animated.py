@@ -935,6 +935,9 @@ def animated_plasma_density_and_info_compare(
     elif n_max is not None and relative_n_max is None:
         c_scale = "absolute"
         
+    if not os.path.isdir(out_dir):
+        raise ValueError("Output directory does not exist")
+        
     z_units = "window"
     
     sim_dir_1 = os.path.join(sup_dir_1, "diags", "hdf5")
